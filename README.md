@@ -1,7 +1,5 @@
 # RS_Perks
 
-# Information
-
 The RS_Perks plugin is a full gui, mysql connected and in config changeable plugin.
 The RS_Perks plugin have these perks:
 
