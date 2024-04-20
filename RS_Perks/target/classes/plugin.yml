@@ -1,0 +1,9 @@
+name: RS_Perks
+version: '1.0-SNAPSHOT'
+main: de.artur.rs_perks.RS_Perks
+author: artur
+api-version: '1.19'
+depend:
+  - CMI
+commands:
+  perks:
