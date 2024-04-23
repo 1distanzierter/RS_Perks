@@ -26,10 +26,11 @@ public final class RS_Perks extends JavaPlugin {
         plugin = this;
         Bukkit.getConsoleSender().sendMessage("§aPerks startet...");
         loadConfig();
-        getCommand("perks").setExecutor(new PerksCommand());
         Bukkit.getPluginManager().registerEvents(new Listeners(), this);
         Bukkit.getPluginManager().registerEvents(new PerksActivate(), this);;
+        getCommand("perks").setExecutor(new PerksCommand());
         connectMySQL();
+        Bukkit.getConsoleSender().sendMessage("§aPerks gestartet!");
     }
 
     private void loadConfig() {

@@ -1,11 +1,16 @@
 package de.artur.rs_perks.listener;
 
 import com.Zrips.CMI.CMI;
+import com.Zrips.CMI.Containers.CMIEvent;
 import com.Zrips.CMI.Containers.CMIUser;
+import com.Zrips.CMI.Modules.Economy.*;
+import com.Zrips.CMI.Modules.EventActions.EventActionManager;
+import com.Zrips.CMI.events.CMIUserBalanceChangeEvent;
 import de.artur.rs_perks.RS_Perks;
 import de.artur.rs_perks.utils.Inventorys;
 import de.artur.rs_perks.utils.ItemUtil;
 import de.artur.rs_perks.utils.UpdatePerk;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -133,10 +138,15 @@ public class PerksActivate implements Listener {
             switch (e.getSlot()) {
                 case 0:
                     CMIUser user = CMI.getInstance().getPlayerManager().getUser(p);
+                    CMIEconomyAcount economyAcount = new CMIEconomyAcount(user);
                     if(user.getBalance() >= config.getInt("Kein Fallschaden.Price")) {
+                        user.getEconomyAccount().withdraw(config.getInt("Kein Fallschaden.Price"));
                         UpdatePerk.setFallschadenPerk(p.getUniqueId());
                         UpdatePerk.setFallschadenPerkStatus(p.getUniqueId(), true);
                         p.sendMessage(prefix + "§7Du hast erfolgreich das §aFallschaden Perk §7gekauft!");
+                        p.closeInventory();
+                    } else {
+                        p.sendMessage(prefix + "§cDu hast nicht genügend Geld!");
                         p.closeInventory();
                     }
                     break;
@@ -150,10 +160,14 @@ public class PerksActivate implements Listener {
             switch (e.getSlot()) {
                 case 0:
                     CMIUser user = CMI.getInstance().getPlayerManager().getUser(p);
-                    if(user.getBalance() >= config.getInt("Kein Nachtsicht.Price")) {
+                    if(user.getBalance() >= config.getInt("Nachtsicht.Price")) {
+                        user.getEconomyAccount().withdraw(config.getInt("Nachtsicht.Price"));
                         UpdatePerk.setNachtsichtPerk(p.getUniqueId());
                         UpdatePerk.setNachtsichtPerkStatus(p.getUniqueId(), true);
                         p.sendMessage(prefix + "§7Du hast erfolgreich das §aNachtsicht Perk §7gekauft!");
+                        p.closeInventory();
+                    } else {
+                        p.sendMessage(prefix + "§cDu hast nicht genügend Geld!");
                         p.closeInventory();
                     }
                     break;
@@ -168,11 +182,15 @@ public class PerksActivate implements Listener {
                 case 0:
                     CMIUser user = CMI.getInstance().getPlayerManager().getUser(p);
                     if(user.getBalance() >= config.getInt("Kein Ertrinken.Price")) {
+                        user.getEconomyAccount().withdraw(config.getInt("Kein Ertrinken.Price"));
                         UpdatePerk.setErtrinkenPerk(p.getUniqueId());
                         UpdatePerk.setErtrinkenPerkStatus(p.getUniqueId(), true);
                         p.sendMessage(prefix + "§7Du hast erfolgreich das §aKein Ertrinken Perk §7gekauft!");
                         p.closeInventory();
 
+                    } else {
+                        p.sendMessage(prefix + "§cDu hast nicht genügend Geld!");
+                        p.closeInventory();
                     }
                     break;
                 case 4:
@@ -186,9 +204,13 @@ public class PerksActivate implements Listener {
                 case 0:
                     CMIUser user = CMI.getInstance().getPlayerManager().getUser(p);
                     if(user.getBalance() >= config.getInt("Kein Hunger.Price")) {
+                        user.getEconomyAccount().withdraw(config.getInt("Kein Hunger.Price"));
                         UpdatePerk.setHungerPerk(p.getUniqueId());
                         UpdatePerk.setHungerPerkStatus(p.getUniqueId(), true);
                         p.sendMessage(prefix + "§7Du hast erfolgreich das §aKein Hunger Perk §7gekauft!");
+                        p.closeInventory();
+                    } else {
+                        p.sendMessage(prefix + "§cDu hast nicht genügend Geld!");
                         p.closeInventory();
                     }
                     break;
@@ -203,9 +225,13 @@ public class PerksActivate implements Listener {
                 case 0:
                     CMIUser user = CMI.getInstance().getPlayerManager().getUser(p);
                     if(user.getBalance() >= config.getInt("Sofort Schmelzen.Price")) {
+                        user.getEconomyAccount().withdraw(config.getInt("Sofort Schmelzen.Price"));
                         UpdatePerk.setSchmelzenPerk(p.getUniqueId());
                         UpdatePerk.setSchmelzenPerkStatus(p.getUniqueId(), true);
                         p.sendMessage(prefix + "§7Du hast erfolgreich das §aSofort Schmelzen Perk §7gekauft!");
+                        p.closeInventory();
+                    } else {
+                        p.sendMessage(prefix + "§cDu hast nicht genügend Geld!");
                         p.closeInventory();
                     }
                     break;
@@ -219,10 +245,15 @@ public class PerksActivate implements Listener {
             switch (e.getSlot()) {
                 case 0:
                     CMIUser user = CMI.getInstance().getPlayerManager().getUser(p);
-                    if(user.getBalance() >= config.getInt("Kein Feuerresistenz.Price")) {
+
+                    if(user.getBalance() >= config.getInt("Feuerresistenz.Price")) {
+                        user.getEconomyAccount().withdraw(String.valueOf(p.getWorld()), config.getInt("Feuerresistenz.Price"), user);
                         UpdatePerk.setFeuerPerk(p.getUniqueId());
                         UpdatePerk.setFeuerPerkStatus(p.getUniqueId(), true);
                         p.sendMessage(prefix + "§7Du hast erfolgreich das §aFeuerresistenz Perk §7gekauft!");
+                        p.closeInventory();
+                    } else {
+                        p.sendMessage(prefix + "§cDu hast nicht genügend Geld!");
                         p.closeInventory();
                     }
                     break;
@@ -236,10 +267,14 @@ public class PerksActivate implements Listener {
             switch (e.getSlot()) {
                 case 0:
                     CMIUser user = CMI.getInstance().getPlayerManager().getUser(p);
-                    if(user.getBalance() >= config.getInt("Kein XP.Price")) {
+                    if(user.getBalance() >= config.getInt("XP.Price")) {
+                        user.getEconomyAccount().withdraw(config.getInt("XP.Price"));
                         UpdatePerk.setXPPerk(p.getUniqueId());
                         UpdatePerk.setXPPerkStatus(p.getUniqueId(), true);
                         p.sendMessage(prefix + "§7Du hast erfolgreich das §aKeepXP Perk §7gekauft!");
+                        p.closeInventory();
+                    } else {
+                        p.sendMessage(prefix + "§cDu hast nicht genügend Geld!");
                         p.closeInventory();
                     }
                     break;

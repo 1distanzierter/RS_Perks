@@ -4,13 +4,12 @@ import de.artur.rs_perks.RS_Perks;
 import de.artur.rs_perks.utils.UpdatePerk;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.FoodLevelChangeEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.player.PlayerExpChangeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -25,7 +24,6 @@ import java.util.HashMap;
 
 public class Listeners implements Listener {
 
-    HashMap<Player, Integer> lvl = new HashMap<Player, Integer>();
 
     private String prefix = RS_Perks.getInstance().getConfig().getString("Prefix").replace("&", "§");
     private FileConfiguration config = RS_Perks.getInstance().getConfig();
@@ -47,24 +45,26 @@ public class Listeners implements Listener {
 
     @EventHandler
     public void onDamage(EntityDamageEvent e) {
-        Player p = (Player) e.getEntity();
-        if (UpdatePerk.getFallschadenPerkStatus(p.getUniqueId()) == 1) {
-            if (e.getCause().equals(EntityDamageEvent.DamageCause.FALL))
-                e.setCancelled(true);
-        }
-        if(UpdatePerk.getFeuerPerkStatus(p.getUniqueId()) == 1) {
-            if(e.getCause().equals(EntityDamageEvent.DamageCause.FIRE) || e.getCause().equals(EntityDamageEvent.DamageCause.FIRE_TICK) || e.getCause().equals(EntityDamageEvent.DamageCause.LAVA)) {
-                e.setCancelled(true);
+        if(e.getEntity() instanceof Player) {
+            Player p = (Player) e.getEntity();
+            if (UpdatePerk.getFallschadenPerkStatus(p.getUniqueId()) == 1) {
+                if (e.getCause().equals(EntityDamageEvent.DamageCause.FALL)) {
+                    e.setCancelled(true);
+                } else {
+                    return;
+                }
             }
-        }
-        if(UpdatePerk.getErtrinkenPerkStatus(p.getUniqueId()) == 1) {
-            if(e.getCause().equals(EntityDamageEvent.DamageCause.DROWNING)) {
-                e.setCancelled(true);
+            if (UpdatePerk.getFeuerPerkStatus(p.getUniqueId()) == 1) {
+                if (e.getCause().equals(EntityDamageEvent.DamageCause.FIRE) || e.getCause().equals(EntityDamageEvent.DamageCause.FIRE_TICK) || e.getCause().equals(EntityDamageEvent.DamageCause.LAVA)) {
+                    e.setCancelled(true);
+                } else {
+                    return;
+                }
             }
-        }
-        if(UpdatePerk.getXPPerkStatus(p.getUniqueId()) == 1) {
-            if(p.getHealth() <= 0) {
-                lvl.put(p, p.getLevel());
+            if (UpdatePerk.getErtrinkenPerkStatus(p.getUniqueId()) == 1) {
+                if (e.getCause().equals(EntityDamageEvent.DamageCause.DROWNING)) {
+                    e.setCancelled(true);
+                }
             }
         }
     }
